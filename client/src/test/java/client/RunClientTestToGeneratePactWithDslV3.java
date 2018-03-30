@@ -13,7 +13,7 @@ import au.com.dius.pact.consumer.PactVerification;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.model.RequestResponsePact;
 
-public class RunClientTestToGeneratePactWithDsl extends FunctionalMunitSuite {
+public class RunClientTestToGeneratePactWithDslV3 extends FunctionalMunitSuite {
 	
 	private static final String HTTP_PORT_PROPERTY_NAME = "http.port";
 	private static final String HTTP_HOST_PROPERTY_NAME = "http.host";
@@ -47,7 +47,8 @@ public class RunClientTestToGeneratePactWithDsl extends FunctionalMunitSuite {
                 .uponReceiving("retrieve data from Service")
 					.path("/")
 					.method("GET")
-				.willRespondWith().status(200)
+				.willRespondWith()
+					.status(200)
 					.body("{\"result\":\"success\"}")
 					.headers(headers)
 				.toPact();

@@ -14,7 +14,7 @@ import au.com.dius.pact.consumer.PactVerificationResult;
 import au.com.dius.pact.model.MockProviderConfig;
 import au.com.dius.pact.model.RequestResponsePact;
 
-public class RunClientTestToGeneratePact extends FunctionalMunitSuite {
+public class RunClientTestToGeneratePactV2 extends FunctionalMunitSuite {
 
 	private static final String TEST_SUITE_MUNIT_FILE = "client-test-suite.xml";
 	private static final String TEST_FLOW_NAME = "client-test-suite-clientCallTest";
