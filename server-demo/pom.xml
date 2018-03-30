@@ -34,7 +34,7 @@
 							<consumers>
 								<consumer>
 									<name>SomeConsumer</name>
-									<pactFile>../client-demo/target/pacts/SomeConsumer-SomeProvider.json</pactFile>
+									<pactFile>/server-demo/src/test/resources/SomeConsumer-SomeProvider.json</pactFile>
 								</consumer>
 							</consumers>
 						</serviceProvider>

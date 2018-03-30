@@ -1,0 +1,39 @@
+{
+    "provider": {
+        "name": "SomeProvider"
+    },
+    "consumer": {
+        "name": "SomeConsumer"
+    },
+    "interactions": [
+        {
+            "description": "retrieve data from Service",
+            "request": {
+                "method": "GET",
+                "path": "/"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "content-type": "application/json"
+                },
+                "body": {
+                    "result": "success"
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "john smith books a civic"
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "pact-specification": {
+            "version": "3.0.0"
+        },
+        "pact-jvm": {
+            "version": "3.5.14"
+        }
+    }
+}
