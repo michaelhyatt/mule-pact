@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <http:request-config name="HTTP_Request_Configuration" host="${http.host}" port="${http.port}" basePath="/" doc:name="HTTP Request Configuration"/>
+    <flow name="clientFlow">
+        <poll doc:name="Poll">
+            <fixed-frequency-scheduler frequency="10000"/>
+            <logger message="Starting poll" level="INFO" doc:name="Logger"/>
+        </poll>
+        <flow-ref name="clientCall" doc:name="Flow Reference"/>
+        <logger message="Done." level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="clientCall">
+        <http:request config-ref="HTTP_Request_Configuration" path="/" method="GET" doc:name="HTTP"/>
+    </flow>
+</mule>
