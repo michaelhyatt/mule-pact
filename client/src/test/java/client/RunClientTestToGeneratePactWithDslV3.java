@@ -12,6 +12,7 @@ import au.com.dius.pact.consumer.PactProviderRuleMk2;
 import au.com.dius.pact.consumer.PactVerification;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.model.RequestResponsePact;
+import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonBody;
 
 public class RunClientTestToGeneratePactWithDslV3 extends FunctionalMunitSuite {
 	
@@ -49,7 +50,11 @@ public class RunClientTestToGeneratePactWithDslV3 extends FunctionalMunitSuite {
 					.method("GET")
 				.willRespondWith()
 					.status(200)
-					.body("{\"result\":\"success\"}")
+					.body(
+							newJsonBody((o) -> {
+								o.stringValue("result", "success");
+							}
+						).build())
 					.headers(headers)
 				.toPact();
     }
