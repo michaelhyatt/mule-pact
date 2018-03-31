@@ -26,7 +26,10 @@
         <AsyncLogger name="Tracking" level="WARN"/>
         
         <!--AsyncLogger name="httpclient.wire" level="ALL" /-->
-
+		<AsyncLogger name="org.mule.module.http.internal.HttpMessageLogger"
+			level="DEBUG" />
+		<AsyncLogger name="com.ning.http" level="DEBUG" />
+		
         <AsyncRoot level="INFO">
             <AppenderRef ref="Console"/>
         </AsyncRoot>
