@@ -10,20 +10,100 @@
             "description": "retrieve data from Service",
             "request": {
                 "method": "GET",
-                "path": "/"
+                "path": "/api/contacts"
             },
             "response": {
                 "status": 200,
                 "headers": {
-                    "content-type": "application/json"
+                    "Content-Type": "application/json; charset=UTF-8"
                 },
-                "body": {
-                    "result": "success"
-                }
+                "body": [
+                    {
+                        "email": "test@gmail.com",
+                        "first_name": "test1",
+                        "last_name": "test12"
+                    }
+                ]
             },
             "providerStates": [
                 {
-                    "name": "john smith books a civic"
+                    "name": "set list of contacts for retrieval"
+                }
+            ]
+        },
+        {
+            "description": "creating a new entry in service",
+            "request": {
+                "method": "POST",
+                "path": "/api/contacts/0",
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "body": {
+                    "creation_datetime": "2018-03-31T22:59",
+                    "email": "example@test.com",
+                    "first_name": "example1",
+                    "last_name": "example2"
+                },
+                "matchingRules": {
+                    "path": {
+                        "": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "/api/contacts/[0-9]+"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    },
+                    "body": {
+                        "$.first_name": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.last_name": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.email": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.creation_datetime": {
+                            "matchers": [
+                                {
+                                    "match": "timestamp",
+                                    "timestamp": "yyyy-MM-dd'T'HH:mm"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    },
+                    "header": {
+                        
+                    }
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "providerStates": [
+                {
+                    "name": "About to create a contact"
                 }
             ]
         }

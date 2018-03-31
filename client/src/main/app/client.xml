@@ -1,22 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
-    <http:request-config name="HTTP_Request_Configuration" host="${http.host}" port="${http.port}" basePath="/" doc:name="HTTP Request Configuration"/>
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <http:request-config name="HTTP_Request_Configuration" host="${http.host}" port="${http.port}" basePath="/api" doc:name="HTTP Request Configuration">
+        <http:raml-api-configuration location="src/main/api/pact-demo.raml"/>
+    </http:request-config>
     <flow name="clientFlow">
         <poll doc:name="Poll">
             <fixed-frequency-scheduler frequency="10000"/>
             <logger message="Starting poll" level="INFO" doc:name="Logger"/>
         </poll>
-        <flow-ref name="clientCall" doc:name="Flow Reference"/>
+        <flow-ref name="getCall" doc:name="clientCall"/>
+        <flow-ref name="postCall" doc:name="Flow Reference"/>
         <logger message="Done." level="INFO" doc:name="Logger"/>
     </flow>
-    <flow name="clientCall">
-        <http:request config-ref="HTTP_Request_Configuration" path="/" method="GET" doc:name="HTTP"/>
+    <flow name="getCall">
+        <http:request config-ref="HTTP_Request_Configuration" path="/contacts" method="GET" doc:name="HTTP"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="postCall">
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	first_name: "Mike",
+	last_name: "Bolan",
+	email: "test@test.com",
+	creation_datetime: now as :datetime {format: "yyyy-MM-dd'T'HH:mm"}
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <http:request config-ref="HTTP_Request_Configuration" path="/contacts/{id}" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:uri-param paramName="id" value="123123123"/>
+            </http:request-builder>
+        </http:request>
     </flow>
 </mule>

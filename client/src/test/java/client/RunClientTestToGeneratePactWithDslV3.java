@@ -1,7 +1,9 @@
 package client;
 
+import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonArray;
 import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonBody;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +24,8 @@ public class RunClientTestToGeneratePactWithDslV3 extends FunctionalMunitSuite {
 	private static final String CONSUMER = "SomeConsumer";
 	private static final String PROVIDER = "SomeProvider";
 	private static final String TEST_SUITE_MUNIT_FILE = "client-test-suite.xml";
-	private static final String TEST_FLOW_NAME = "client-test-suite-clientCallTest";
+	private static final String TEST_FLOW_NAME1 = "getTest";
+	private static final String TEST_FLOW_NAME2 = "postTest";
 	private static final int PORT = 1234;
 	private static final String LOCALHOST = "localhost";
 	
@@ -42,28 +45,47 @@ public class RunClientTestToGeneratePactWithDslV3 extends FunctionalMunitSuite {
     public RequestResponsePact configurationFragment(PactDslWithProvider builder) {
     	
         Map<String, String> headers = new HashMap<String, String>();
-        headers.put("content-type", "application/json");   	
+        headers.put("Content-Type", "application/json; charset=UTF-8");   	
  
         return builder
-                .given("john smith books a civic")
+                .given("set list of contacts for retrieval")
                 .uponReceiving("retrieve data from Service")
-					.path("/")
+					.path("/api/contacts")
 					.method("GET")
 				.willRespondWith()
 					.status(200)
+					.headers(headers)
+					.body(
+							newJsonArray((a) ->
+								a.object((o) -> {
+									o.stringValue("first_name", "test1");
+									o.stringValue("last_name", "test12");
+									o.stringValue("email", "test@gmail.com");
+								})
+						).build())
+	            .given("About to create a contact")
+				.uponReceiving("creating a new entry in service")
+					.matchPath("/api/contacts/[0-9]+")
+					.method("POST")
 					.body(
 							newJsonBody((o) -> {
-								o.stringValue("result", "success");
-							}
-						).build())
-					.headers(headers)
+								o.stringType("first_name", "example1");
+								o.stringType("last_name", "example2");
+								o.stringType("email", "example@test.com");
+								o.timestamp("creation_datetime", "yyyy-MM-dd'T'HH:mm", new Date());
+							}).build()
+						)
+				.willRespondWith()
+					.status(200)
+					.body("")
 				.toPact();
     }
     
     @PactVerification(PROVIDER)
     @Test
-    public void testFlow() throws Exception {
+    public void testFlows() throws Exception {
     	
-		runFlow(TEST_FLOW_NAME, testEvent(""));
+		runFlow(TEST_FLOW_NAME1, testEvent(""));
+		runFlow(TEST_FLOW_NAME2, testEvent(""));
     }
 }
