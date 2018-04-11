@@ -35,6 +35,12 @@ public class RunClientTestToGeneratePactWithDslV3 extends FunctionalMunitSuite {
 	@Override
 	protected String getConfigResources() {
 		
+		// Point Mule HTTP config parameters to localhost and available port 
+		// for mocking:
+		// <http:request-config name="HTTP_Request_Configuration"
+		// host="${http.host}" port="${http.port}" basePath="/api"
+		// ...
+		// </http:request-config>
 		System.setProperty(HTTP_HOST_PROPERTY_NAME, LOCALHOST);
 		System.setProperty(HTTP_PORT_PROPERTY_NAME, String.valueOf(PORT));
 				
@@ -47,6 +53,7 @@ public class RunClientTestToGeneratePactWithDslV3 extends FunctionalMunitSuite {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json; charset=UTF-8");   	
  
+        // Contract definition
         return builder
                 .given("set list of contacts for retrieval")
                 .uponReceiving("retrieve data from Service")
@@ -85,6 +92,7 @@ public class RunClientTestToGeneratePactWithDslV3 extends FunctionalMunitSuite {
     @Test
     public void testFlows() throws Exception {
     	
+    	// Run MUnit flows
 		runFlow(TEST_FLOW_NAME1, testEvent(""));
 		runFlow(TEST_FLOW_NAME2, testEvent(""));
     }
