@@ -40,7 +40,7 @@ payload]]></dw:set-payload>
 ---
 {
 	first_name: "Mike",
-	last_name: "Bolan",
+	last_name: "Smith",
 	email: "test@test.com",
 	creation_datetime: now as :datetime {format: "yyyy-MM-dd'T'HH:mm"}
 }]]></dw:set-payload>

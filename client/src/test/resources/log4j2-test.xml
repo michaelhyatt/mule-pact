@@ -29,7 +29,7 @@
 		<!--AsyncLogger name="httpclient.wire" level="ALL" / -->
 		<AsyncLogger name="org.mule.module.http.internal.HttpMessageLogger"
 			level="DEBUG" />
-		<AsyncLogger name="com.ning.http" level="DEBUG" />
+		<AsyncLogger name="com.ning.http" level="INFO" />
 		
 		<AsyncRoot level="INFO">
 			<AppenderRef ref="Console" />
